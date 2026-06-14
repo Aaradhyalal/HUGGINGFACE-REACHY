@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .calculator-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .calculator-title {
+            text-align: center;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .display {
+            background: #ecf0f1;
+            color: #2c3e50;
+            font-size: 32px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: right;
+            margin-bottom: 20px;
+            word-wrap: break-word;
+            word-break: break-all;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .number-btn {
+            background: #95a5a6;
+            color: #2c3e50;
+        }
+
+        .number-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .operator-btn {
+            background: #3498db;
+        }
+
+        .operator-btn:hover {
+            background: #2980b9;
+        }
+
+        .equals-btn {
+            background: #27ae60;
+            grid-column: 3;
+        }
+
+        .equals-btn:hover {
+            background: #229954;
+        }
+
+        .clear-btn {
+            background: #e74c3c;
+            grid-column: 1;
+        }
+
+        .clear-btn:hover {
+            background: #c0392b;
+        }
+
+        .backspace-btn {
+            background: #e74c3c;
+            grid-column: 2;
+        }
+
+        .backspace-btn:hover {
+            background: #c0392b;
+        }
+
+        .sqrt-btn {
+            background: #9b59b6;
+        }
+
+        .sqrt-btn:hover {
+            background: #8e44ad;
+        }
+
+        .percent-btn {
+            background: #9b59b6;
+        }
+
+        .percent-btn:hover {
+            background: #8e44ad;
+        }
+
+        @media (max-width: 480px) {
+            .calculator-container {
+                padding: 15px;
+            }
+
+            button {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .display {
+                font-size: 24px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-title">🧮 Calculator</div>
+        <div class="display" id="display">0</div>
+        <div class="buttons-container">
+            <button class="clear-btn" onclick="clearDisplay()">C</button>
+            <button class="backspace-btn" onclick="backspace()">←</button>
+            <button class="sqrt-btn" onclick="calculateSquareRoot()">√</button>
+            <button class="operator-btn" onclick="appendOperator('/')">÷</button>
+
+            <button class="number-btn" onclick="appendNumber('7')">7</button>
+            <button class="number-btn" onclick="appendNumber('8')">8</button>
+            <button class="number-btn" onclick="appendNumber('9')">9</button>
+            <button class="operator-btn" onclick="appendOperator('*')">×</button>
+
+            <button class="number-btn" onclick="appendNumber('4')">4</button>
+            <button class="number-btn" onclick="appendNumber('5')">5</button>
+            <button class="number-btn" onclick="appendNumber('6')">6</button>
+            <button class="operator-btn" onclick="appendOperator('-')">−</button>
+
+            <button class="number-btn" onclick="appendNumber('1')">1</button>
+            <button class="number-btn" onclick="appendNumber('2')">2</button>
+            <button class="number-btn" onclick="appendNumber('3')">3</button>
+            <button class="operator-btn" onclick="appendOperator('+')">+</button>
+
+            <button class="number-btn" style="grid-column: span 2;" onclick="appendNumber('0')">0</button>
+            <button class="number-btn" onclick="appendNumber('.')">.</button>
+            <button class="percent-btn" onclick="calculatePercentage()">%</button>
+
+            <button class="equals-btn" style="grid-column: span 2;" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let expression = '';
+
+        function appendNumber(num) {
+            expression += num;
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            if (expression !== '') {
+                expression += op;
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            const display = document.getElementById('display');
+            display.textContent = expression || '0';
+        }
+
+        function calculate() {
+            try {
+                const result = eval(expression);
+                expression = result.toString();
+                updateDisplay();
+            } catch (error) {
+                expression = '';
+                document.getElementById('display').textContent = 'Error';
+                setTimeout(() => {
+                    clearDisplay();
+                }, 1000);
+            }
+        }
+
+        function clearDisplay() {
+            expression = '';
+            updateDisplay();
+        }
+
+        function backspace() {
+            expression = expression.slice(0, -1);
+            updateDisplay();
+        }
+
+        function calculateSquareRoot() {
+            try {
+                const result = Math.sqrt(parseFloat(expression));
+                expression = result.toString();
+                updateDisplay();
+            } catch (error) {
+                expression = '';
+                document.getElementById('display').textContent = 'Error';
+                setTimeout(() => {
+                    clearDisplay();
+                }, 1000);
+            }
+        }
+
+        function calculatePercentage() {
+            try {
+                const result = parseFloat(expression) / 100;
+                expression = result.toString();
+                updateDisplay();
+            } catch (error) {
+                expression = '';
+                document.getElementById('display').textContent = 'Error';
+                setTimeout(() => {
+                    clearDisplay();
+                }, 1000);
+            }
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            if (event.key >= '0' && event.key <= '9') appendNumber(event.key);
+            if (event.key === '.') appendNumber('.');
+            if (event.key === '+') appendOperator('+');
+            if (event.key === '-') appendOperator('-');
+            if (event.key === '*') appendOperator('*');
+            if (event.key === '/') {
+                event.preventDefault();
+                appendOperator('/');
+            }
+            if (event.key === 'Enter' || event.key === '=') {
+                event.preventDefault();
+                calculate();
+            }
+            if (event.key === 'Backspace') {
+                event.preventDefault();
+                backspace();
+            }
+            if (event.key === 'Escape') clearDisplay();
+        });
+    </script>
+</body>
+</html>
