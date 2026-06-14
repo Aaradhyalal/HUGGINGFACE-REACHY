@@ -2,7 +2,7 @@
 
 A simple sample Python application demonstrating basic functions and structure.
 
-## Features
+## Features by Aaradhya
 
 - Simple greeting function
 - Basic arithmetic operations
